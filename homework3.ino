@@ -42,8 +42,6 @@ bool inSubmeniuSetari = false; //flag daca suntem in meniul de setari
 int vreauAfisareMeniu = 0; //flag pentru afisare meniu principal
 bool asteaptaParolaNoua = false; //flag pasul 2 din schimbarea parolei
 
-//functie care goleste bufferul serial
-
 //initializare sistem
 void setup() {
   Serial.begin(9600); //pornire comunicare seriala
@@ -147,6 +145,7 @@ void setareUltrasonic() {
   }
 }
 
+//functie care goleste bufferul serial
 void clearSerialBuffer() {
   if(Serial.available() > 0) Serial.read();
 }
@@ -274,12 +273,9 @@ void handleSettingsMenu() {
           afisareSubmeniuSetari();
           break;
     }
-
-    // Resetăm flagurile
     asteaptaValoare = false;
     opt = 0;
 
-    // Reafișăm submeniul
     Serial.println();
     afisareSubmeniuSetari();
   }
