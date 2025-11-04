@@ -76,7 +76,7 @@ If incorrect or not entered → Trigger alarm (buzzer + red LED blinking).
 The program is written in modular form, using clear functions for each subsystem:
 - masurareDistanta() – reads the ultrasonic sensor and returns distance in centimeters.
 - setareUltrasonic() – performs automatic calibration at startup.
-- heckSensors() – reads both sensors and updates system state.
+- checkSensors() – reads both sensors and updates system state.
 - handleMenu() – manages user interaction in the main menu.
 - handleSettingsMenu() – manages the configuration submenu.
 - handlePassword() – verifies and validates entered passwords.
