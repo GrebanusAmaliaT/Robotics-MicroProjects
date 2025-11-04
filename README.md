@@ -110,7 +110,13 @@ Serial Monitor provides all interactions and confirmations:
 Invalid commands in the menu trigger clear messages and re-display of the available options.
 
 ### Pictures of the Setup
-....
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/b5431311-634c-4e79-badd-cda7a4e1d2ec" width="460" />
+  <img src="https://github.com/user-attachments/assets/cde5a08e-f856-4670-bb96-6dd77db67257" width="500" />
+  <img src="https://github.com/user-attachments/assets/ee321fd9-dc90-4898-a515-2459a197aa86" width="500" />
+  <img src="https://github.com/user-attachments/assets/a02d6953-b3c3-47a7-86b2-837237531b6a" width="500" />
+</p>
+
 ### Video
 ....
 
@@ -183,12 +189,16 @@ The logic in loop() continuously checks time differences using millis() to trans
 - Finally, the system resets to its initial idle state.
 
 ### Pictures of the Setup
-![WhatsApp Image 2025-10-27 at 22 16 43_e516a140](https://github.com/user-attachments/assets/b1b62aec-ab23-4ad0-b8f9-008b2f3c405f)
-![WhatsApp Image 2025-10-27 at 22 16 43_3e49c2fd](https://github.com/user-attachments/assets/c0cd73f4-df40-4694-bdad-0ccf35edf8bf)
-![WhatsApp Image 2025-10-27 at 22 16 43_5752864a](https://github.com/user-attachments/assets/2b56ecdd-5386-494b-a992-71f703f0be1a)
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/b1b62aec-ab23-4ad0-b8f9-008b2f3c405f" width="500" />
+  <img src="https://github.com/user-attachments/assets/c0cd73f4-df40-4694-bdad-0ccf35edf8bf" width="500" />
+  <img src="https://github.com/user-attachments/assets/2b56ecdd-5386-494b-a992-71f703f0be1a" width="500" />
+</p>
 
 ### Video
 https://youtube.com/shorts/KFcf_d8wKIo?feature=share
+
+<br>
 
 ## Homework 1 - RGB LED Control with 3 Potentiometers
 
@@ -206,9 +216,13 @@ The Arduino program continuously reads the analog voltage from each potentiomete
 All numerical constants, such as the maximum analog or PWM values, are defined at the beginning of the code for readability and precision. The sketch maintains consistent indentation, descriptive variable names, and comments explaining each step, following the provided style guide.
 
 ### Pictures of the setup
-![poza1](https://github.com/user-attachments/assets/0f9ed50d-454f-4ad5-b0aa-eea64735bf96)
-![poza2](https://github.com/user-attachments/assets/fe00b1e4-353c-4bbe-9034-7f97eff80574)
-![poza3](https://github.com/user-attachments/assets/8cd44f28-21f4-46c5-8f19-329ba0a78f0a)
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/0f9ed50d-454f-4ad5-b0aa-eea64735bf96" width="500" />
+  <br>
+  <img src="https://github.com/user-attachments/assets/fe00b1e4-353c-4bbe-9034-7f97eff80574" width="500" />
+  <br>
+  <img src="https://github.com/user-attachments/assets/8cd44f28-21f4-46c5-8f19-329ba0a78f0a" width="500" />
+</p>
 
 ### Video
 https://youtube.com/shorts/D9-72uJa4h8?feature=share
