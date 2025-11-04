@@ -107,6 +107,7 @@ Serial Monitor provides all interactions and confirmations:
 - “SPY CAT a detectat un posibil intrus! Introduceti parola.”
 - “Parola corecta. Sistem dezarmat.”
 - “Parola gresita – alarma activata!”
+<br>
 Invalid commands in the menu trigger clear messages and re-display of the available options.
 
 ### Pictures of the Setup
