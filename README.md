@@ -119,7 +119,7 @@ Invalid commands in the menu trigger clear messages and re-display of the availa
 </p>
 
 ### Video
-....
+https://youtube.com/shorts/A0DlVpqmwFQ?feature=share
 
 <br>
 
