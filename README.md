@@ -129,8 +129,7 @@ Timing is handled entirely using millis() — no delay() calls are used anywhere
 
 The state machine below illustrates the logical flow of the Simon Says game.
 
-stateDiagram-v2
-    [*] --> IdleMenu
+stateDiagram --> IdleMenu
     IdleMenu --> MenuAction : Select option
     MenuAction --> ShowSequence : Start game
     ShowSequence --> InputPhase : Time expired
@@ -203,6 +202,7 @@ This ensures non-blocking behavior even during input or display transitions.
 ....
 
 <br>
+
 ## Homework 3 - Home Alarm System
 
 ### Task Requirements
