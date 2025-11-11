@@ -10,6 +10,199 @@ Each homework includes the official requirements, source files, implementation d
 
 <br>
 
+## Homework 4 - Simon Says
+
+### Task Requirements
+
+Design and implement a Simon Says memory game using a 4-digit 7-segment display driven by a 74HC595 shift register, a joystick for control, a buzzer for audio feedback, and an extra push button for the pause/menu function.
+
+The game displays a sequence of 4 digits that the player must memorize and reproduce correctly using the joystick. Each round gets progressively faster.
+
+### Components
+
+- Component	Quantity	Description
+- 74HC595 Shift Register	1	Drives the 7-segment segments
+- 4-Digit 7-Segment Display	1	Common Anode display (documented below)
+- Joystick with Push Button	1	X, Y, and SW used for input
+- Buzzer	1	Non-blocking sound feedback
+- Push Button	1	Pause/Menu function
+- Resistors & Wiring	as needed	Segment current-limiting and pull-downs
+
+### Pin Map
+
+- Function	Arduino Pin	Notes
+- 74HC595 LATCH	11	Controls output register
+- 74HC595 CLOCK	10	Shifts bits
+- 74HC595 DATA	12	Serial data in
+- Digit Select Pins	4, 5, 6, 7	Control the 4 digits (multiplexed)
+- Joystick X	A0	Horizontal movement
+- Joystick Y	A1	Vertical movement
+- Joystick SW	8	Push button (active LOW, internal pull-up)
+- Pause/Menu Button	2	Active LOW (connected to GND)
+- Buzzer	9	Non-blocking tone output
+
+### System Behavior Summary
+
+In the Idle/Menu state, the 4-digit display cycles between the options PLAy, SCOR, StOP, and HELP.
+The player navigates using the joystick, and a short tick sound is heard every time the selection changes.
+
+During the ShowSequence phase, a random 4-digit sequence is displayed on the screen for a limited time T milliseconds, which decreases with each successful round to increase difficulty.
+
+In the InputPhase, the player re-enters the displayed digits using the joystick.
+The currently active digit blinks fast (4 Hz), while locked digits blink slowly (1 Hz), giving clear visual feedback about the editing state.
+
+In the CheckAnswer stage, the program compares the user’s input with the generated sequence.
+If correct, a success tone is played and the score increases; otherwise, an error tone is emitted.
+
+The Result state briefly displays either the updated score or Err on the display, before automatically returning to the main menu.
+
+Finally, pressing the Pause/Menu button at any time during gameplay shows PAUS on the display.
+After approximately 1.2 seconds, the game exits the paused state and returns safely to the main menu.
+
+### Controls
+Action	Input	Description
+Move cursor	Joystick LEFT / RIGHT	Select active digit (0–3)
+Edit digit	Joystick UP / DOWN	Change current digit value (0–9)
+Lock/unlock	Short press (SW)	Lock/unlock current digit
+Submit answer	Long press (SW)	Confirm all digits
+Pause/Menu	Push button (pin 2)	Shows “PAUS” and returns to menu
+
+### Display Texts (4-digit messages)
+Menu – Play =	PLAy
+Menu – Score =SCOR
+Menu – Stop	= StOP
+Menu – Help	= HELP (H custom character)
+During pause = PAUS
+Wrong answer = Err
+Show score = Numeric value
+Game idle	= Current menu item
+
+### Buzzer Feedback
+- Event	Sound
+- Cursor move	Tick (short 2kHz beep)
+- Lock/unlock digit	Click (1.5kHz, 80ms)
+- Success	Success jingle (2.2kHz, 200ms)
+- Error	Low tone (400Hz, 400ms)
+
+All buzzer sounds are non-blocking using millis() control logic.
+
+### Font Table (Segment Encoding)
+
+| Character | Bitmask (ABCDEFG.) |
+|------------|--------------------|
+| 0 | `0b11111100` |
+| 1 | `0b01100000` |
+| 2 | `0b11011010` |
+| 3 | `0b11110010` |
+| 4 | `0b01100110` |
+| 5 | `0b10110110` |
+| 6 | `0b10111110` |
+| 7 | `0b11100000` |
+| 8 | `0b11111110` |
+| 9 | `0b11110110` |
+| A | `0b11101110` |
+| C | `0b10011100` |
+| E | `0b10011110` |
+| L | `0b00011100` |
+| O | `0b11111100` |
+| P | `0b11001110` |
+| R | `0b00001010` |
+| S | `0b10110110` |
+| t | `0b00011110` |
+| U | `0b01111100` |
+| y | `0b01110110` |
+| H (custom) | `0b01101110` |
+| Space | `0b00000000` |
+
+Reasoning:
+Characters chosen for best readability on 7-segment displays (e.g., “y” instead of “Y”, “t” lowercase for clarity).
+
+### Timing and Difficulty
+- Parameter	Default	Description
+- Initial sequence display time	5000 ms	Time digits are visible
+- Decrease per round	1500 ms	Faster difficulty scaling
+- Minimum display time	800 ms	Fastest speed possible
+
+Timing is handled entirely using millis() — no delay() calls are used anywhere.
+
+### State Diagram
+
+The state machine below illustrates the logical flow of the Simon Says game.
+
+stateDiagram-v2
+    [*] --> IdleMenu
+    IdleMenu --> MenuAction : Select option
+    MenuAction --> ShowSequence : Start game
+    ShowSequence --> InputPhase : Time expired
+    InputPhase --> CheckAnswer : Long press
+    CheckAnswer --> Result
+    Result --> IdleMenu : After delay
+    ShowSequence --> Paused : Pause button
+    InputPhase --> Paused : Pause button
+    Paused --> IdleMenu : After 1.2s
+
+### Wiring Diagram
+
+Below is the wiring schematic of the Simon Says game circuit.
+It includes the 74HC595 shift register, 4-digit 7-segment display, joystick, buzzer, and pause button.
+
+| Component | Pin Connection | Description |
+|------------|----------------|--------------|
+| 74HC595 (Data) | 12 | Serial data input |
+| 74HC595 (Clock) | 10 | Shift clock |
+| 74HC595 (Latch) | 11 | Storage register clock |
+| 4-Digit Display | Pins 4–7 | Digit enable control (multiplexed) |
+| Joystick X | A0 | Horizontal movement |
+| Joystick Y | A1 | Vertical movement |
+| Joystick SW | 8 | Push button (with internal pull-up) |
+| Buzzer | 9 | Audio feedback output |
+| Pause/Menu Button | 2 | Game pause and menu trigger |
+| Power | 5V / GND | Common circuit power |
+
+### Blink Semantics
+- Mode	Blink rate	Description
+- Selected digit	4 Hz (~125 ms on/off)	Fast blink
+- Locked digit	1 Hz (~500 ms on/off)	Slow blink
+- Inactive digit	Steady ON	No blink
+
+### Multiplex Display Control
+
+- The 4-digit 7-segment display is driven using time-multiplexing:
+- Only one digit is active at any time.
+- Refresh frequency ≈ 500 Hz, imperceptible to the eye.
+- Implemented via the non-blocking updateDisplayMultiplex() function.
+
+### Audio Feedback Implementation
+
+- All buzzer tones use tone(pin, freq) and are automatically stopped using millis() timers.
+This ensures non-blocking behavior even during input or display transitions.
+
+### Code Architecture
+
+- updateStateIdleMenu() → handles joystick navigation and selection.
+- updateStateShowSequence() → displays the memory sequence.
+- updateStateInputPhase() → processes joystick inputs and blinking digits.
+- updateStateCheckAnswer() → verifies the sequence.
+- updateStateResult() → handles result logic (success/fail).
+- updateStatePaused() → displays “PAUS” then returns to menu.
+- updateDisplayMultiplex() → manages digit refresh.
+- playTickSound(), playClickSound(), playSuccessSound(), playErrorSound() → buzzer feedback functions.
+ 
+### Notes
+
+- The system uses INPUT_PULLUP for all buttons (active LOW).
+- Debouncing for joystick and menu inputs uses millis().
+- No delay() is used anywhere.
+- Game difficulty increases after each round.
+- Code fully non-blocking and modular.
+
+### Pictures of the setup
+......
+
+### Video
+....
+
+<br>
 ## Homework 3 - Home Alarm System
 
 ### Task Requirements
