@@ -4,7 +4,7 @@
 // definim pinii pentru ecranul lcd si controalele analogice/digitale
 const int PIN_RS = 8, PIN_EN = 9, PIN_D4 = 4, PIN_D5 = 5, PIN_D6 = 6, PIN_D7 = 7;
 
-// pinii pentru joystick si butoane. folosim pullup intern unde e cazul
+// pinii pentru joystick si butoane; pullup intern unde e cazul
 const int PIN_JOY_X = A0;
 const int PIN_JOY_Y = A1;
 const int PIN_JOY_BTN = 2;    
@@ -43,7 +43,7 @@ class GameModel {
     float playerX; // pozitia x e float pentru miscare fluida
     float playerY; // y e 0 sau 1 (sus sau jos)
     bool isJumping;
-    unsigned long jumpStartTime; // retinem cand a inceput saritura pentru a o opri automat
+    unsigned long jumpStartTime; // retin cand a inceput saritura pentru a o opri automat
     
     unsigned long animStartTime; // timer pentru animatia de final
     unsigned long deathTime;    
@@ -56,7 +56,7 @@ class GameModel {
     
     int settingsOption = 0; // optiunea curenta din meniul settings (0 sau 1)
 
-    // readucem variabilele la zero pentru un joc nou
+    // readuc variabilele la zero pentru un joc nou
     void reset() {
         playerX = 2.0;
         playerY = 1.0; // incepe pe randul de jos
@@ -65,16 +65,16 @@ class GameModel {
         score = 0;
         won = false; 
         currentState = PLAYING;
-        generateMap(); // generam o harta noua random
+        generateMap(); // generez o harta noua random
     }
 
-    // populam matricea hartii cu obstacole si bonusuri
+    // populez matricea hartii cu obstacole si bonusuri
     void generateMap() {
         for(int c=0; c<MAP_LENGTH; c++) {
             mapData[0][c] = 0; // randul de sus gol initial
             mapData[1][c] = 0; // randul de jos gol initial
             
-            // nu punem obstacole in primii 5 pasi si nici la final
+            // nu pun obstacole in primii 5 pasi si nici la final
             // random(0, 10) > 7 inseamna 20-30% sanse sa apara inamic jos
             if(c > 5 && c < MAP_LENGTH-5 && random(0, 10) > 7) 
                 mapData[1][c] = 1; // 1 = inamic/obstacol
@@ -83,7 +83,7 @@ class GameModel {
             if(c > 5 && random(0, 15) > 12) 
                 mapData[0][c] = 2; // 2 = inima/punctaj
         }
-        mapData[1][MAP_LENGTH-1] = 3; // marcam finalul nivelului
+        mapData[1][MAP_LENGTH-1] = 3; // finalul nivelului
     }
 };
 
@@ -101,20 +101,45 @@ class IRenderer {
     virtual void drawGameOver(GameModel &model) = 0; 
 };
 
-// implementare dummy pentru debug pe serial monitor, nu afiseaza grafica reala
 class SerialRenderer : public IRenderer {
+    float lastX = -99;
   public:
-    void init() override { Serial.begin(9600); }
-    void loadCharacters(bool isGirl) override {}
-    void drawSelectScreen(bool isGirl) override {}
-    void drawMenu(int highScores[]) override {}
-    void drawSettings(int option) override { Serial.println("In Settings"); }
-    void drawAbout() override { Serial.println("About Screen"); }
+    void init() override { Serial.begin(9600); Serial.println("SERIAL DEBUG READY"); }
+    
+    void loadCharacters(bool isGirl) override { 
+        Serial.print("Selected: "); 
+        Serial.println(isGirl ? "GIRL" : "BOY"); 
+    }
+    
+    void drawSelectScreen(bool isGirl) override { 
+        Serial.println(isGirl ? "< GIRL >" : "< BOY >"); 
+    }
+    
+    void drawMenu(int highScores[]) override { 
+        // trebuia si asta definita chiar daca e goala
+    } 
+    
     void drawPause() override { Serial.println("PAUSE"); }
-    void drawGameOver(GameModel &m) override {}
-    void drawGame(GameModel &m) override {}
-};
+    
+    void drawGameOver(GameModel &m) override { Serial.println("GAME OVER"); }
 
+    void drawSettings(int option) override {
+        Serial.print("Settings Option: ");
+        Serial.println(option);
+    }
+
+    void drawAbout() override {
+        Serial.println("About Screen");
+    }
+    
+    void drawGame(GameModel &m) override {
+        if(abs(m.playerX - lastX) > 0.1) {
+            lastX = m.playerX;
+            Serial.print("Player Pos: "); Serial.println(m.playerX);
+            Serial.print("Score: "); Serial.println(m.score);
+        }
+    }
+};
 // clasa principala care se ocupa de afisarea pe ecranul 16x2
 class LCDRenderer : public IRenderer {
   public:
@@ -122,8 +147,8 @@ class LCDRenderer : public IRenderer {
         lcd.begin(16, 2);
     }
 
-    // incarcam in memoria lcd-ului doar caracterele necesare
-    // schimbam intre baiat si fata in functie de selectie
+    // incarc in memoria lcd-ului doar caracterele necesare
+    // schimb intre baiat si fata in functie de selectie
     void loadCharacters(bool isGirl) override {
         if (isGirl) {
             lcd.createChar(0, rawGirl); // pozitia 0 e jucatorul
@@ -184,28 +209,28 @@ class LCDRenderer : public IRenderer {
     void drawGame(GameModel &m) override {
         lcd.clear(); // stergem tot ca sa nu ramana artefacte
 
-        // parcurgem cele 2 randuri si cele 16 coloane vizibile
+        // parcurg cele 2 randuri si cele 16 coloane vizibile
         for(int r=0; r<2; r++) {
             lcd.setCursor(0, r);
             for(int col=0; col<16; col++) {
-                // calculam indexul real din harta bazat pe pozitia camerei
+                // calculez indexul real din harta bazat pe pozitia camerei
                 int mapIdx = m.cameraX + col;
 
-                // daca am iesit din harta, nu desenam nimic
+                // daca am iesit din harta, nu desenez nimic
                 if(mapIdx >= m.MAP_LENGTH) { 
                     lcd.print(" "); 
                     continue; 
                 }
 
-                // verificam daca jucatorul e pe aceasta pozitie exacta
-                // facem cast la int pentru ca pozitia jucatorului e float
+                // verific daca jucatorul e pe aceasta pozitie exacta
+                // fac cast la int pentru ca pozitia jucatorului e float
                 if ((int)m.playerX == mapIdx && (int)m.playerY == r) {
                     // daca a pierdut prin "iubire", afisam inima in loc de jucator
                     if (m.currentState == LOVE_ANIMATION) lcd.write((byte)2); 
                     else 
-                        lcd.write((byte)0); // desenam jucatorul normal
+                        lcd.write((byte)0); // desenez jucatorul normal
                 } else {
-                    // daca nu e jucatorul, verificam ce e pe harta (inamic, inima, zid)
+                    // daca nu e jucatorul, verific ce e pe harta (inamic, inima, zid)
                     byte tile = m.mapData[r][mapIdx];
                     if(tile == 0) lcd.print(" ");
                     else if(tile == 1) 
@@ -228,7 +253,7 @@ class LCDRenderer : public IRenderer {
 
     // ecranul de final cu slide-uri care se schimba la 2 secunde
     void drawGameOver(GameModel &m) override {
-        int hearts = m.score / 10; // calculam numarul de inimi colectate
+        int hearts = m.score / 10; // calculez numarul de inimi colectate
         int slide = (millis() / 2000) % 3; 
 
         lcd.clear(); 
@@ -289,7 +314,7 @@ class GameController {
 
     void setup() {
         view->init();
-        // activam rezistentele de pullup interne pentru a nu avea interferente
+        // activez rezistentele de pullup interne pentru a nu avea interferente
         pinMode(PIN_JOY_BTN, INPUT_PULLUP); 
         pinMode(PIN_BTN_PAUSE, INPUT_PULLUP);
         pinMode(PIN_BUZZER, OUTPUT);
@@ -321,7 +346,7 @@ class GameController {
         else if (newScore > scores[2]) { 
             scores[2]=newScore; }
             
-        // scriem inapoi in memorie
+        // scriu inapoi in memorie
         for(int i=0; i<3; i++) 
         EEPROM.put(i*2, scores[i]);
     }
@@ -353,7 +378,7 @@ class GameController {
             }
         }
 
-        // oprim buzzerul daca a trecut durata notei
+        // opresc buzzerul daca a trecut durata notei
         if (noteDuration > 0 && (currentMillis - noteStartTime > noteDuration)) {
             noTone(PIN_BUZZER); noteDuration = 0;
         }
@@ -361,7 +386,7 @@ class GameController {
         // bucla principala de update la fiecare 100ms
         if (currentMillis - lastUpdate >= TICK_RATE) {
             
-            // daca e pauza nu facem update la logica, doar desenam ecranul de pauza
+            // daca e pauza nu fac update la logica, doar desenez ecranul de pauza
             if (model->currentState == PAUSED) { 
                 view->drawPause(); return; }
 
@@ -441,7 +466,7 @@ class GameController {
 
                     if (btnJoy && (currentMillis - lastButtonPress > 500)) {
                         if (model->settingsOption == 0) {
-                            // resetare eeprom - scriem 0 pe toate pozitiile
+                            // resetare eeprom - scriu 0 pe toate pozitiile
                             int zero = 0; for(int i=0; i<3; i++) 
                             EEPROM.put(i*2, zero);
                             tone(PIN_BUZZER, 200, 300); // sunet de confirmare jos
@@ -521,15 +546,15 @@ class GameController {
 
         if (tile == 1) { // coliziune cu inamicul (baiatul/fata opus/a)
             model->won = false; 
-            saveScore(model->score); // salvam scorul inainte de game over
+            saveScore(model->score); // salvez scorul inainte de game over
             model->deathTime = millis(); 
             model->animStartTime = millis(); 
-            model->currentState = LOVE_ANIMATION; // declansam animatia de final
+            model->currentState = LOVE_ANIMATION; // animatia de final
             lastButtonPress = millis();
         }
         else if (tile == 2) { // colectare inima
             model->score += 10; 
-            model->mapData[pY][pX] = 0; // stergem inima de pe harta
+            model->mapData[pY][pX] = 0; // sterg inima de pe harta
             playSound(2000, 50); // sunet scurt si ascutit
         }
         else if (tile == 3) { // ajuns la linia de finish
@@ -548,13 +573,13 @@ class GameController {
     }
 };
 
-// ==========================================
-// 4. initializare obiecte globale
-// ==========================================
+// initializare obiecte globale
 GameModel model;
 LCDRenderer lcdRenderer; 
-//SerialRenderer serialRenderer; 
 GameController controller(&model, &lcdRenderer);
+
+// SerialRenderer serialRenderer; //obiectul de serial
+// GameController controller(&model, &serialRenderer);
 
 void setup() { 
     controller.setup(); 
