@@ -19,6 +19,14 @@ Design and implement a side-scrolling platformer game on a 16x2 LCD display usin
 
 The game features character selection, procedural map generation, jumping physics, score persistence (EEPROM), and a menu system.
 
+### Implementation Details
+
+* **Procedural Generation:** The `generateMap()` function creates a new 100-tile world each round. It uses `random()` to place enemies (1) and hearts (2), ensuring the first 5 tiles are always safe for spawning.
+* **Floating Point Physics:** The player's X position is stored as a `float` (incremented by 0.5). This allows for smoother internal logic calculation, which is then cast to `int` for grid rendering.
+* **Camera Logic:** The camera window (16 chars) does not lock strictly to the player. It uses a "dead zone" approach: the camera only scrolls forward if the player moves past the 8th column relative to the screen, and scrolls back if the player retreats too close to the left edge.
+* **Smart Rendering:** The `drawGame` function iterates only through the 16 columns currently visible based on `cameraX`. It calculates the offset into the global `mapData` matrix, ensuring efficiency.
+* **Non-Blocking Audio:** All sounds are handled via `millis()`. The `playSound()` function sets a timestamp, and the main loop checks if the duration has elapsed to call `noTone()`, ensuring gameplay never freezes for sound.
+  
 ### Implemented Bonuses
 
 For this project I have implemented multiple bonus features as described in the requirements (Sections 5.4.5 and 5.6):
