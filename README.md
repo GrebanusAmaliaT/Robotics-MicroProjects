@@ -65,7 +65,7 @@ For this project I have implemented multiple bonus features as described in the 
 | Joystick Module | 1 | X/Y Analog + Switch |
 | Push Button | 1 | Pause/Back function |
 | Passive Buzzer | 1 | Audio feedback |
-| Potentiometer | 1 | LCD Contrast control (10kΩ) |
+| Potentiometer | 1 | LCD Contrast control |
 | Resistors | As needed | Current limiting |
 
 ### Pin Map
