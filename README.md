@@ -10,9 +10,7 @@ Each homework includes the official requirements, source files, implementation d
 
 
 <br>
-
 ## Homework 5 - LCD Platformer: Dangerous Love
-
 
 ### Task Requirements
 
@@ -22,31 +20,7 @@ The game features character selection, procedural map generation, jumping physic
 
 ### Implemented Bonuses
 
-Am recitit cu atenție cerința (PDF-ul) și codul tău.
-
-Concluzie: Ai acoperit excelent punctele de la 5.4.5 (Bonus Ideas), dar ai omis un bonus tehnic foarte important menționat la secțiunea 5.6 Publishing task:
-
-"For bonus, include a short demo in Serial first, then LCD."
-
-Codul tău conține clasa SerialRenderer complet implementată și interfața IRenderer. Aceasta este o dovadă clară de Clean Architecture și ar trebui neapărat trecută la lista de Bonusuri (demonstrează că poți randa jocul și în consolă, nu doar pe LCD).
-
-Am adăugat acest punct ("Dual Rendering Architecture") în lista de bonusuri și am rafinat puțin descrierile existente ca să "puște" exact pe ce vrea asistentul.
-
-Iată varianta FINALĂ și COMPLETĂ a fișierului README.md. Dă copy-paste la tot blocul de cod de mai jos:
-
-Markdown
-
-## Homework 5 - LCD Platformer: Dangerous Love
-
-### Task Requirements
-
-Design and implement a side-scrolling platformer game on a 16x2 LCD display using **Clean Architecture** principles (Separation of Concerns). The system must utilize a **GameModel** for logic, a **GameController** for inputs/updates, and an **IRenderer** interface to decouple drawing logic from game state.
-
-The game features character selection, procedural map generation, jumping physics, score persistence (EEPROM), and a menu system.
-
-### 🏆 Implemented Bonuses
-
-This project implements multiple bonus features as described in the requirements (Sections 5.4.5 and 5.6):
+For this project I have implemented multiple bonus features as described in the requirements (Sections 5.4.5 and 5.6):
 
 * **Clean Architecture & Dual Rendering (Section 5.6 Bonus):**
     * Implemented a flexible **IRenderer interface**.
