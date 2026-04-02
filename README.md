@@ -1,23 +1,26 @@
-# Introduction to Robotics (2025-2026)
+# Robotics Projects
 
-## Laboratory Homeworks
-
-Faculty of Mathematics and Computer Science, University of Bucharest
-3rd Year – Robotics Specialization
-
-This repository contains the laboratory homeworks completed for the Introduction to Robotics course.
-Each homework includes the official requirements, source files, implementation details, images of the physical setup, and a demonstration video.
-
+This repository brings together a series of small projects focused on developing practical skills in embedded systems and Arduino programming. 
+For each project, you’ll find the full source code, a description of the implementation, images of the hardware setup, and a link to a demonstration video.
 
 <br>
 
-## Homework 5 - LCD Platformer: Dangerous Love
+# Project 5 - LCD Platformer: Dangerous Love
 
-### Task Requirements
+This project aimed to design and implement a side-scrolling platformer game on a 16x2 LCD display, using Clean Architecture principles to ensure a clear separation of concerns. The system is structured around a GameModel for game logic, a GameController for handling input and updates, and an IRenderer interface to decouple rendering from the game state.”
 
-Design and implement a side-scrolling platformer game on a 16x2 LCD display using **Clean Architecture** principles (Separation of Concerns). The system must utilize a **GameModel** for logic, a **GameController** for inputs/updates, and an **IRenderer** interface to decouple drawing logic from game state.
+### Pictures of the Setup
 
-The game features character selection, procedural map generation, jumping physics, score persistence (EEPROM), and a menu system.
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/2b17bc0b-da4c-494a-99b9-0885da898cb6" width="400" />
+  <img src="https://github.com/user-attachments/assets/103cc81d-3809-4537-a90e-7032eddae4b3" width="500" />
+</p>
+
+### Video 
+
+https://www.youtube.com/watch?v=uY1ge7WyrSc
+ 
+<br>
 
 ### Implementation Details
 
@@ -27,9 +30,9 @@ The game features character selection, procedural map generation, jumping physic
 * **Smart Rendering:** The `drawGame` function iterates only through the 16 columns currently visible based on `cameraX`. It calculates the offset into the global `mapData` matrix, ensuring efficiency.
 * **Non-Blocking UI & Audio:** All sounds and delays are handled via `millis()`. For example, the "SCORE RESET!" message uses a state-based timer (`resetTimer`) to hold the message on screen for 2 seconds without using `delay()`, allowing the processor to continue running background tasks.
 
-### >>>>> Implemented Bonuses
+### Features 
 
-For this project I have implemented multiple bonus features as described in the requirements (Sections 5.4.5 and 5.6):
+For this project I have implemented multiple bonus features
 
 * **Clean Architecture & Dual Rendering (Section 5.6 Bonus):**
     * Implemented a flexible **IRenderer interface**.
@@ -68,23 +71,6 @@ For this project I have implemented multiple bonus features as described in the 
 | Potentiometer | 1 | LCD Contrast control |
 | Resistors | As needed | Current limiting |
 
-### Pin Map
-
-| Function | Arduino Pin | Notes |
-| :--- | :--- | :--- |
-| LCD RS | 8 | Register Select |
-| LCD EN | 9 | Enable |
-| LCD D4 | 4 | Data Pin 4 |
-| LCD D5 | 5 | Data Pin 5 |
-| LCD D6 | 6 | Data Pin 6 |
-| LCD D7 | 7 | Data Pin 7 |
-| Joystick X | A0 | Horizontal movement |
-| Joystick Y | A1 | Vertical movement (Menu) / Jump |
-| Joystick SW | 2 | Select / Start / Restart (Active LOW) |
-| Pause Button | 10 | Active LOW (Internal Pull-up) |
-| Buzzer | 3 | PWM Audio output |
-| Random Seed | A5 | Unconnected pin for entropy |
-
 ### System Behavior Summary
 
 Upon booting, the game enters the **Character Selection** state (`< GIRL >` vs `< BOY >`). The choice determines the player sprite and the enemy sprite.
@@ -119,32 +105,8 @@ The **Settings Menu** allows the user to reset stored scores or view credits. Th
 * **Lose Screen:** `Game over! :(` / `You fell in love`.
 * **Settings:** `> Reset Score` / `> About Section`.
 * **Reset:** `SCORE RESET!` (Visible for 2 seconds).
-
-### Buzzer Feedback
-
-The audio system uses non-blocking logic (`millis()`).
-
-| Event | Sound | Description |
-| :--- | :--- | :--- |
-| Menu Select | 1000 Hz (200ms) | Confirmation beep |
-| Jump | 600 Hz (100ms) | Upward movement sound |
-| Collect Heart | 2000 Hz (50ms) | High-pitch "coin" sound |
-| Pause | 500 Hz / 1000 Hz | Toggle sounds |
-| Settings Enter | 800 Hz (100ms) | Navigation sound |
-| **Love Animation** | Rising Scale | 523Hz -> 659Hz -> 784Hz -> 1046Hz sequence |
-
-### Custom Characters (Bitmaps)
-
-The game uses custom 5x8 bitmaps to render the entities.
-
-| Character | Binary Pattern (Concept) | Description |
-| :--- | :--- | :--- |
-| **Girl** | `0b10001, 0b01110...` | Player or Enemy depending on selection |
-| **Boy** | `0b01110, 0b01110...` | Player or Enemy depending on selection |
-| **Heart** | `0b00000, 0b01010...` | Collectible item (`<3`) |
-
+  
 ### Architecture & SoC
-
 The code follows the **Model-View-Controller (MVC)** pattern:
 
 1.  **GameModel:** Holds the state (player position `float x, y`, map data, score, state enums). It is completely decoupled from hardware.
@@ -152,6 +114,15 @@ The code follows the **Model-View-Controller (MVC)** pattern:
     * **LCDRenderer:** Concrete implementation for the 16x2 screen.
     * **SerialRenderer:** Implementation for debugging via Serial Monitor.
 3.  **GameController:** Bridges Input and Model. Handles the game loop, timers (`millis`), physics calculations, and updates the view.
+### EEPROM Memory Map
+
+The top 3 high scores are stored in the EEPROM. If the values are invalid (garbage data), they are initialized to 0.
+
+| Address | Data | Description |
+| :--- | :--- | :--- |
+| 0x00 - 0x01 | `int` (2 bytes) | 1st Place Score |
+| 0x02 - 0x03 | `int` (2 bytes) | 2nd Place Score |
+| 0x04 - 0x05 | `int` (2 bytes) | 3rd Place Score |
 
 ### State Diagram
 
@@ -173,46 +144,27 @@ stateDiagram-v2
     GameOver --> Menu : Joystick Click
 ```
 
-### EEPROM Memory Map
-
-The top 3 high scores are stored in the EEPROM. If the values are invalid (garbage data), they are initialized to 0.
-
-| Address | Data | Description |
-| :--- | :--- | :--- |
-| 0x00 - 0x01 | `int` (2 bytes) | 1st Place Score |
-| 0x02 - 0x03 | `int` (2 bytes) | 2nd Place Score |
-| 0x04 - 0x05 | `int` (2 bytes) | 3rd Place Score |
-
-### Difficulty & Timing
-
-* **Update Rate:** Game logic ticks every **100ms**.
-* **Jump Physics:** Duration 1500ms (Gravity simulation).
-* **Map Size:** 100 tiles.
-* **Slideshow:** Results screen slides update every 2000ms.
-
-### Pictures of the Setup
-
-<p float="left">
-  <img src="https://github.com/user-attachments/assets/2b17bc0b-da4c-494a-99b9-0885da898cb6" height="400" />
-  <img src="https://github.com/user-attachments/assets/103cc81d-3809-4537-a90e-7032eddae4b3" height="300" />
-</p>
-
-### Video 
-
-https://www.youtube.com/watch?v=uY1ge7WyrSc
-  
 <br>
 
-## Homework 4 - Simon Says
+# Project 4 - Simon Says Game
 
-### Task Requirements
+This project aimed to design and implement a Simon Says memory game using a 4-digit 7-segment display driven by a 74HC595 shift register, a joystick for control, a buzzer for audio feedback, and an additional push button for pause and menu functions. The game displays a sequence of four digits that the player must memorize and reproduce using the joystick, with each round becoming progressively faster.
 
-Design and implement a Simon Says memory game using a 4-digit 7-segment display driven by a 74HC595 shift register, a joystick for control, a buzzer for audio feedback, and an extra push button for the pause/menu function.
+### Pictures of the setup
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/008392b6-d9e2-4f66-9d5b-aa4a21618c7d" width="500" />
+  <img src="https://github.com/user-attachments/assets/3f6a8f3e-a241-4aa2-9634-817791bf2673" width="500" />
+  <img src="https://github.com/user-attachments/assets/6d626880-a4a1-44e4-b551-242fd26a67c7" width="500" />
+  <img src="https://github.com/user-attachments/assets/c67c5142-a8da-4e1f-adce-161e7da9cff5" width="500" />
+</p>
+<img width="500" height="500" alt="image" src="https://github.com/user-attachments/assets/c0407bc2-2aa1-4f60-bff2-ebf4b9670c84" />
 
-The game displays a sequence of 4 digits that the player must memorize and reproduce correctly using the joystick. Each round gets progressively faster.
+### Video
+https://youtube.com/shorts/zyQKuGl74S0?feature=share
+
+<br>
 
 ### Components
-
 - Component	Quantity	Description
 - 74HC595 Shift Register	1	Drives the 7-segment segments
 - 4-Digit 7-Segment Display	1	Common Anode display (documented below)
@@ -221,36 +173,23 @@ The game displays a sequence of 4 digits that the player must memorize and repro
 - Push Button	1	Pause/Menu function
 - Resistors & Wiring	as needed	Segment current-limiting and pull-downs
 
-### Pin Map
-
-- Function	Arduino Pin	Notes
-- 74HC595 LATCH	11	Controls output register
-- 74HC595 CLOCK	10	Shifts bits
-- 74HC595 DATA	12	Serial data in
-- Digit Select Pins	4, 5, 6, 7	Control the 4 digits (multiplexed)
-- Joystick X	A0	Horizontal movement
-- Joystick Y	A1	Vertical movement
-- Joystick SW	8	Push button (active LOW, internal pull-up)
-- Pause/Menu Button	2	Active LOW (connected to GND)
-- Buzzer	9	Non-blocking tone output
-
 ### System Behavior Summary
 
-In the Idle/Menu state, the 4-digit display cycles between the options PLAy, SCOR, StOP, and HELP.
-The player navigates using the joystick, and a short tick sound is heard every time the selection changes.
+1. Idle / Menu StateDisplay:
+Cycles PLAy, SCOR, StOP, HELP.
+Control: Joystick navigation with a tick sound per toggle.
 
-During the ShowSequence phase, a random 4-digit sequence is displayed on the screen for a limited time T milliseconds, which decreases with each successful round to increase difficulty.
+3. Gameplay Phases
+- ShowSequence: Displays 4 random digits for $T$ ms (time $T$ decreases per round).
+- InputPhase: User enters digits via joystick.
+Active digit: Fast blink (4 Hz).
+Locked digits: Slow blink (1 Hz).
+- CheckAnswer: Compares input to sequence.
+Plays success tone (score up) or error tone.
 
-In the InputPhase, the player re-enters the displayed digits using the joystick.
-The currently active digit blinks fast (4 Hz), while locked digits blink slowly (1 Hz), giving clear visual feedback about the editing state.
-
-In the CheckAnswer stage, the program compares the user’s input with the generated sequence.
-If correct, a success tone is played and the score increases; otherwise, an error tone is emitted.
-
-The Result state briefly displays either the updated score or Err on the display, before automatically returning to the main menu.
-
-Finally, pressing the Pause/Menu button at any time during gameplay shows PAUS on the display.
-After approximately 1.2 seconds, the game exits the paused state and returns safely to the main menu.
+3. Results & Pause
+- Result State: Shows updated score or Err, then auto-returns to Menu.
+- Pause Function: Pressing the button shows PAUS. After 1.2s, the game resets safely to the Main Menu.
 
 ### Controls
 Action	Input	Description
@@ -270,56 +209,22 @@ Wrong answer = Err
 Show score = Numeric value
 Game idle	= Current menu item
 
-### Buzzer Feedback
-- Event	Sound
-- Cursor move	Tick (short 2kHz beep)
-- Lock/unlock digit	Click (1.5kHz, 80ms)
-- Success	Success jingle (2.2kHz, 200ms)
-- Error	Low tone (400Hz, 400ms)
 
-All buzzer sounds are non-blocking using millis() control logic.
+### Audio Feedback Implementation
+- All buzzer tones use tone(pin, freq) and are automatically stopped using millis() timers.
+This ensures non-blocking behavior even during input or display transitions.
 
-### Font Table (Segment Encoding)
-
-| Character | Bitmask (ABCDEFG.) |
-|------------|--------------------|
-| 0 | `0b11111100` |
-| 1 | `0b01100000` |
-| 2 | `0b11011010` |
-| 3 | `0b11110010` |
-| 4 | `0b01100110` |
-| 5 | `0b10110110` |
-| 6 | `0b10111110` |
-| 7 | `0b11100000` |
-| 8 | `0b11111110` |
-| 9 | `0b11110110` |
-| A | `0b11101110` |
-| C | `0b10011100` |
-| E | `0b10011110` |
-| L | `0b00011100` |
-| O | `0b11111100` |
-| P | `0b11001110` |
-| R | `0b00001010` |
-| S | `0b10110110` |
-| t | `0b00011110` |
-| U | `0b01111100` |
-| y | `0b01110110` |
-| H (custom) | `0b01101110` |
-| Space | `0b00000000` |
-
-Reasoning:
-Characters chosen for best readability on 7-segment displays (e.g., “y” instead of “Y”, “t” lowercase for clarity).
-
-### Timing and Difficulty
-- Parameter	Default	Description
-- Initial sequence display time	5000 ms	Time digits are visible
-- Decrease per round	1500 ms	Faster difficulty scaling
-- Minimum display time	800 ms	Fastest speed possible
-
-Timing is handled entirely using millis() — no delay() calls are used anywhere.
-
+### Code Architecture
+- updateStateIdleMenu() → handles joystick navigation and selection.
+- updateStateShowSequence() → displays the memory sequence.
+- updateStateInputPhase() → processes joystick inputs and blinking digits.
+- updateStateCheckAnswer() → verifies the sequence.
+- updateStateResult() → handles result logic (success/fail).
+- updateStatePaused() → displays “PAUS” then returns to menu.
+- updateDisplayMultiplex() → manages digit refresh.
+- playTickSound(), playClickSound(), playSuccessSound(), playErrorSound() → buzzer feedback functions.
+ 
 ### State Diagram
-
 The state machine below illustrates the logical flow of the Simon Says game.
 
 ```mermaid
@@ -335,82 +240,27 @@ stateDiagram-v2
     InputPhase --> Paused : Pause button
     Paused --> IdleMenu : After 1.2s
 ```
-
-### Wiring Diagram
-
-Below is the wiring schematic of the Simon Says game circuit.
-It includes the 74HC595 shift register, 4-digit 7-segment display, joystick, buzzer, and pause button.
-
-| Component | Pin Connection | Description |
-|------------|----------------|--------------|
-| 74HC595 (Data) | 12 | Serial data input |
-| 74HC595 (Clock) | 10 | Shift clock |
-| 74HC595 (Latch) | 11 | Storage register clock |
-| 4-Digit Display | Pins 4–7 | Digit enable control (multiplexed) |
-| Joystick X | A0 | Horizontal movement |
-| Joystick Y | A1 | Vertical movement |
-| Joystick SW | 8 | Push button (with internal pull-up) |
-| Buzzer | 9 | Audio feedback output |
-| Pause/Menu Button | 2 | Game pause and menu trigger |
-| Power | 5V / GND | Common circuit power |
-
-### Blink Semantics
-- Mode	Blink rate	Description
-- Selected digit	4 Hz (~125 ms on/off)	Fast blink
-- Locked digit	1 Hz (~500 ms on/off)	Slow blink
-- Inactive digit	Steady ON	No blink
-
-### Multiplex Display Control
-
-- The 4-digit 7-segment display is driven using time-multiplexing:
-- Only one digit is active at any time.
-- Refresh frequency ≈ 500 Hz, imperceptible to the eye.
-- Implemented via the non-blocking updateDisplayMultiplex() function.
-
-### Audio Feedback Implementation
-
-- All buzzer tones use tone(pin, freq) and are automatically stopped using millis() timers.
-This ensures non-blocking behavior even during input or display transitions.
-
-### Code Architecture
-
-- updateStateIdleMenu() → handles joystick navigation and selection.
-- updateStateShowSequence() → displays the memory sequence.
-- updateStateInputPhase() → processes joystick inputs and blinking digits.
-- updateStateCheckAnswer() → verifies the sequence.
-- updateStateResult() → handles result logic (success/fail).
-- updateStatePaused() → displays “PAUS” then returns to menu.
-- updateDisplayMultiplex() → manages digit refresh.
-- playTickSound(), playClickSound(), playSuccessSound(), playErrorSound() → buzzer feedback functions.
- 
-### Notes
-
-- The system uses INPUT_PULLUP for all buttons (active LOW).
-- Debouncing for joystick and menu inputs uses millis().
-- No delay() is used anywhere.
-- Game difficulty increases after each round.
-- Code fully non-blocking and modular.
-
-### Pictures of the setup
-<p float="left">
-  <img src="https://github.com/user-attachments/assets/008392b6-d9e2-4f66-9d5b-aa4a21618c7d" width="500" />
-  <img src="https://github.com/user-attachments/assets/3f6a8f3e-a241-4aa2-9634-817791bf2673" width="500" />
-  <img src="https://github.com/user-attachments/assets/6d626880-a4a1-44e4-b551-242fd26a67c7" width="500" />
-  <img src="https://github.com/user-attachments/assets/c67c5142-a8da-4e1f-adce-161e7da9cff5" width="500" />
-</p>
-<img width="800" height="500" alt="image" src="https://github.com/user-attachments/assets/c0407bc2-2aa1-4f60-bff2-ebf4b9670c84" />
-
-### Video
-https://youtube.com/shorts/zyQKuGl74S0?feature=share
-
 <br>
 
-## Homework 3 - Home Alarm System
+# Project 3 - Home Alarm System
 
-### Task Requirements
-Design and implement an Arduino-based home alarm system that uses an ultrasonic sensor (HC-SR04) and a photoresistor (LDR) to detect intrusions or changes in the environment.
-The system can be armed, disarmed, and configured through a Serial Monitor menu.
-When armed, it continuously monitors the environment and triggers an alarm if a movement or a sudden distance variation is detected.
+This project aimed to design and implement an Arduino-based home alarm system using an ultrasonic sensor (HC-SR04) and a photoresistor (LDR) to detect intrusions or environmental changes. The system can be armed, disarmed, and configured through a Serial Monitor menu. When armed, it continuously monitors the surroundings and triggers an alarm if movement or sudden distance changes are detected.
+
+### Pictures of the Setup
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/b5431311-634c-4e79-badd-cda7a4e1d2ec" width="500" />
+  <img src="https://github.com/user-attachments/assets/cde5a08e-f856-4670-bb96-6dd77db67257" width="500" />
+</p>   
+<br>
+<p>
+  <img src="https://github.com/user-attachments/assets/ee321fd9-dc90-4898-a515-2459a197aa86" height ="400" />
+  <img src="https://github.com/user-attachments/assets/a02d6953-b3c3-47a7-86b2-837237531b6a" height ="400" />
+</p>
+
+### Video
+https://youtube.com/shorts/A0DlVpqmwFQ?feature=share
+
+<br>
 
 ### Implementation Details
 The circuit consists of:
@@ -431,31 +281,18 @@ Resistors and jumper wires as needed
 - System Menu (via Serial Monitor)
 
 #### If Disarmed:
-Arm System – manually arms the alarm.
-The system enters a 3-second arming phase before becoming active.
-Settings / Configuration – opens a submenu that allows parameter adjustment.
-Test Alarm – manually activates the alarm for testing purposes.
-
-#### Settings Submenu:
-1. Set Ultrasonic Sensitivity (distantaMax)
-Defines the distance variation threshold (in cm) that triggers the alarm when exceeded.
-2. Set LDR Light Threshold (pragLDR)
-Sets the light level under which the system arms automatically (“night mode”).
-3. Set Buzzer Frequency (buzzerFrecventa)
-Changes the pitch of the alarm sound (in Hz).
-4. Change Password
-Requires entering the current password before setting a new one.
-5. Change System Name
-Updates the displayed name at startup.
-6. Return to Main Menu
+- Arm System – manually arms the alarm.
+- The system enters a 3-second arming phase before becoming active.
+- Settings / Configuration – opens a submenu that allows parameter adjustment.
+- Test Alarm – manually activates the alarm for testing purposes.
 
 #### If Armed:
-The system continuously monitors both sensors.
-If a significant distance change is detected by the ultrasonic sensor, or the light level is below threshold, the system:
-Warns of a possible intrusion.
-Prompts the user to enter the password within 3 seconds.
-If the password is correct → Disarm system.
-If incorrect or not entered → Trigger alarm (buzzer + red LED blinking).
+- The system continuously monitors both sensors.
+- If a significant distance change is detected by the ultrasonic sensor, or the light level is below threshold, the system:
+-> Warns of a possible intrusion.
+-> Prompts the user to enter the password within 3 seconds.
+-> If the password is correct → Disarm system.
+-> If incorrect or not entered → Trigger alarm (buzzer + red LED blinking).
 
 ### System Behavior Summary
 | State                            | Description                                                                              | Indicators                  |
@@ -480,22 +317,6 @@ The program is written in modular form, using clear functions for each subsystem
 
 All time control is handled using millis() for non-blocking delays, ensuring continuous sensor monitoring and responsive menu navigation.
 
-### System Logic Flow
-- Startup & Calibration
-The system averages multiple ultrasonic readings to set an initial reference distance.
-- Disarmed Mode
-The green LED stays ON; if light drops below the pragLDR value, the system arms automatically.
-- Arming Delay (3 seconds)
-Gives the user time to leave before activation.
-- Monitoring Phase
-If distance variation > distantaMax, the system waits for a password.
-- Password Window (3 seconds)
-If password not entered or incorrect → alarm activates.
-- Alarm State
-Buzzer emits sound at buzzerFrecventa; red LED blinks until the correct password is entered.
-- Disarm
-Stops buzzer, turns off red LED, turns on green LED, and returns to idle state.
-
 ## Sistem Feedback
 Serial Monitor provides all interactions and confirmations:
 - “Sistemul a fost armat.”
@@ -505,23 +326,25 @@ Serial Monitor provides all interactions and confirmations:
 <br>
 Invalid commands in the menu trigger clear messages and re-display of the available options.
 
+<br>
+
+# Project 2 – Traffic Lights System
+
+This project aimed to design and implement an Arduino-based traffic light control system for a pedestrian crosswalk. 
+The system manages two traffic lights—one for cars and one for pedestrians—and uses a push button to request crossing, a buzzer for audio feedback, and a 7-segment display to show countdown timers. 
+The traffic light transitions follow a defined sequence and timing, implemented using non-blocking logic with millis() instead of delay().
+
 ### Pictures of the Setup
 <p float="left">
-  <img src="https://github.com/user-attachments/assets/b5431311-634c-4e79-badd-cda7a4e1d2ec" width="460" />
-  <img src="https://github.com/user-attachments/assets/cde5a08e-f856-4670-bb96-6dd77db67257" width="500" />
-  <img src="https://github.com/user-attachments/assets/ee321fd9-dc90-4898-a515-2459a197aa86" width="500" />
-  <img src="https://github.com/user-attachments/assets/a02d6953-b3c3-47a7-86b2-837237531b6a" width="500" />
+  <img src="https://github.com/user-attachments/assets/b1b62aec-ab23-4ad0-b8f9-008b2f3c405f" width="500" />
+  <img src="https://github.com/user-attachments/assets/c0cd73f4-df40-4694-bdad-0ccf35edf8bf" width="500" />
+  <img src="https://github.com/user-attachments/assets/2b56ecdd-5386-494b-a992-71f703f0be1a" width="500" />
 </p>
 
 ### Video
-https://youtube.com/shorts/A0DlVpqmwFQ?feature=share
+https://youtube.com/shorts/KFcf_d8wKIo?feature=share
 
 <br>
-
-## Homework 2 – Traffic Lights System
-
-### Task Requirements
-Design and implement an Arduino-based traffic light control system for a pedestrian crosswalk. The system coordinates the behavior of two traffic lights: one for cars and one for pedestrians. It uses a push button to request pedestrian crossing, a buzzer for auditory feedback, and a 7-segment display to show countdown timers. The transition between traffic light states must follow the specified sequence and timing, using non-blocking logic with millis() instead of delay().
 
 ### Implementation Details
 
@@ -584,32 +407,11 @@ The logic in loop() continuously checks time differences using millis() to trans
 - The pedestrian green light begins blinking and the buzzer speeds up for 4 seconds.
 - Finally, the system resets to its initial idle state.
 
-### Pictures of the Setup
-<p float="left">
-  <img src="https://github.com/user-attachments/assets/b1b62aec-ab23-4ad0-b8f9-008b2f3c405f" width="500" />
-  <img src="https://github.com/user-attachments/assets/c0cd73f4-df40-4694-bdad-0ccf35edf8bf" width="500" />
-  <img src="https://github.com/user-attachments/assets/2b56ecdd-5386-494b-a992-71f703f0be1a" width="500" />
-</p>
-
-### Video
-https://youtube.com/shorts/KFcf_d8wKIo?feature=share
-
 <br>
 
-## Homework 1 - RGB LED Control with 3 Potentiometers
+# Project 1 - RGB LED Control with 3 Potentiometers
 
-### Task Requirements
-
-Create an Arduino circuit and program that controls an RGB LED using three potentiometers — one for each color component (red, green, and blue). Each potentiometer should adjust the brightness of its respective color, allowing the LED to display any color combination.
-
-The potentiometer values must be read through analog inputs and mapped to the 0–255 range required by the PWM output. The implementation should use clear variable names and constants instead of “magic numbers,” and the code must follow proper formatting and consistent style.
-
-### Implementation details 
-The circuit uses three potentiometers connected to the analog pins A0, A1 and A2 of the Arduino UNO. Each potentiometer controls one color channel of a common-cathode RGB LED, whose red, green, and blue pins are connected through appropriate resistors to PWM-enabled digital pins 9, 10 and 11.
-
-The Arduino program continuously reads the analog voltage from each potentiometer, then maps those readings from the input range 0–1023 to the PWM output range 0–255 using the map() function. The resulting values are written to the LED pins with analogWrite(), which adjusts the intensity of each color channel. By varying the three potentiometers, the user can mix colors in real time to produce the full RGB spectrum.
-
-All numerical constants, such as the maximum analog or PWM values, are defined at the beginning of the code for readability and precision. The sketch maintains consistent indentation, descriptive variable names, and comments explaining each step, following the provided style guide.
+This project aimed to create an Arduino-based circuit and program to control an RGB LED using three potentiometers, one for each color component (red, green, and blue). Each potentiometer adjusts the brightness of its corresponding color, allowing the LED to display a wide range of color combinations. The analog input values are mapped to the 0–255 range required for PWM output, and the implementation uses clear variable names, constants, and consistent code formatting.
 
 ### Pictures of the setup
 <p float="left">
@@ -624,3 +426,10 @@ All numerical constants, such as the maximum analog or PWM values, are defined a
 https://youtube.com/shorts/D9-72uJa4h8?feature=share
 
 <br>
+
+### Implementation details 
+The circuit uses three potentiometers connected to the analog pins A0, A1 and A2 of the Arduino UNO. Each potentiometer controls one color channel of a common-cathode RGB LED, whose red, green, and blue pins are connected through appropriate resistors to PWM-enabled digital pins 9, 10 and 11.
+
+The Arduino program continuously reads the analog voltage from each potentiometer, then maps those readings from the input range 0–1023 to the PWM output range 0–255 using the map() function. The resulting values are written to the LED pins with analogWrite(), which adjusts the intensity of each color channel. By varying the three potentiometers, the user can mix colors in real time to produce the full RGB spectrum.
+
+All numerical constants, such as the maximum analog or PWM values, are defined at the beginning of the code for readability and precision. The sketch maintains consistent indentation, descriptive variable names, and comments explaining each step, following the provided style guide.
