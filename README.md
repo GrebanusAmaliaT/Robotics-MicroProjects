@@ -13,11 +13,10 @@ This project aimed to design and implement a side-scrolling platformer game on a
 
 <p float="left">
   <img src="https://github.com/user-attachments/assets/2b17bc0b-da4c-494a-99b9-0885da898cb6" width="400" />
-  <img src="https://github.com/user-attachments/assets/103cc81d-3809-4537-a90e-7032eddae4b3" width="500" />
+  <img src="https://github.com/user-attachments/assets/103cc81d-3809-4537-a90e-7032eddae4b3" width="400" />
 </p>
 
 ### Video 
-
 https://www.youtube.com/watch?v=uY1ge7WyrSc
  
 <br>
@@ -152,12 +151,13 @@ This project aimed to design and implement a Simon Says memory game using a 4-di
 
 ### Pictures of the setup
 <p float="left">
-  <img src="https://github.com/user-attachments/assets/008392b6-d9e2-4f66-9d5b-aa4a21618c7d" width="500" />
-  <img src="https://github.com/user-attachments/assets/3f6a8f3e-a241-4aa2-9634-817791bf2673" width="500" />
-  <img src="https://github.com/user-attachments/assets/6d626880-a4a1-44e4-b551-242fd26a67c7" width="500" />
-  <img src="https://github.com/user-attachments/assets/c67c5142-a8da-4e1f-adce-161e7da9cff5" width="500" />
+  <img src="https://github.com/user-attachments/assets/008392b6-d9e2-4f66-9d5b-aa4a21618c7d" width="400" />
+  <img src="https://github.com/user-attachments/assets/3f6a8f3e-a241-4aa2-9634-817791bf2673" width="400" />
+  <img src="https://github.com/user-attachments/assets/6d626880-a4a1-44e4-b551-242fd26a67c7" width="400" />
+  <img src="https://github.com/user-attachments/assets/c67c5142-a8da-4e1f-adce-161e7da9cff5" width="400" />
 </p>
-<img width="500" height="500" alt="image" src="https://github.com/user-attachments/assets/c0407bc2-2aa1-4f60-bff2-ebf4b9670c84" />
+<br>
+<img width="400" height="500" alt="image" src="https://github.com/user-attachments/assets/c0407bc2-2aa1-4f60-bff2-ebf4b9670c84" />
 
 ### Video
 https://youtube.com/shorts/zyQKuGl74S0?feature=share
@@ -248,8 +248,8 @@ This project aimed to design and implement an Arduino-based home alarm system us
 
 ### Pictures of the Setup
 <p float="left">
-  <img src="https://github.com/user-attachments/assets/b5431311-634c-4e79-badd-cda7a4e1d2ec" width="500" />
-  <img src="https://github.com/user-attachments/assets/cde5a08e-f856-4670-bb96-6dd77db67257" width="500" />
+  <img src="https://github.com/user-attachments/assets/b5431311-634c-4e79-badd-cda7a4e1d2ec" width="400" />
+  <img src="https://github.com/user-attachments/assets/cde5a08e-f856-4670-bb96-6dd77db67257" width="400" />
 </p>   
 <br>
 <p>
@@ -336,9 +336,9 @@ The traffic light transitions follow a defined sequence and timing, implemented 
 
 ### Pictures of the Setup
 <p float="left">
-  <img src="https://github.com/user-attachments/assets/b1b62aec-ab23-4ad0-b8f9-008b2f3c405f" width="500" />
-  <img src="https://github.com/user-attachments/assets/c0cd73f4-df40-4694-bdad-0ccf35edf8bf" width="500" />
-  <img src="https://github.com/user-attachments/assets/2b56ecdd-5386-494b-a992-71f703f0be1a" width="500" />
+  <img src="https://github.com/user-attachments/assets/b1b62aec-ab23-4ad0-b8f9-008b2f3c405f" width="400" />
+  <img src="https://github.com/user-attachments/assets/c0cd73f4-df40-4694-bdad-0ccf35edf8bf" width="400" />
+  <img src="https://github.com/user-attachments/assets/2b56ecdd-5386-494b-a992-71f703f0be1a" width="400" />
 </p>
 
 ### Video
@@ -415,11 +415,11 @@ This project aimed to create an Arduino-based circuit and program to control an 
 
 ### Pictures of the setup
 <p float="left">
-  <img src="https://github.com/user-attachments/assets/0f9ed50d-454f-4ad5-b0aa-eea64735bf96" width="500" />
+  <img src="https://github.com/user-attachments/assets/0f9ed50d-454f-4ad5-b0aa-eea64735bf96" width="400" />
   <br>
-  <img src="https://github.com/user-attachments/assets/fe00b1e4-353c-4bbe-9034-7f97eff80574" width="500" />
+  <img src="https://github.com/user-attachments/assets/fe00b1e4-353c-4bbe-9034-7f97eff80574" width="400" />
   <br>
-  <img src="https://github.com/user-attachments/assets/8cd44f28-21f4-46c5-8f19-329ba0a78f0a" width="500" />
+  <img src="https://github.com/user-attachments/assets/8cd44f28-21f4-46c5-8f19-329ba0a78f0a" width="400" />
 </p>
 
 ### Video
